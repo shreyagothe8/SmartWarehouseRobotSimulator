@@ -17,6 +17,9 @@ function App() {
     return 'bg-slate-500 text-slate-400';
   };
 
+  // Calculate total active tasks across all phases
+  const activeTaskCount = tasks.filter(t => t.status === 'Retrieving' || t.status === 'Delivering').length;
+
   return (
     <div className="flex h-screen w-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black text-slate-200 font-sans">
       
@@ -25,9 +28,9 @@ function App() {
         
         <div className="border-b border-slate-800 pb-4">
           <h1 className="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.4)] uppercase">
-            Smart Warehouse Robot Simulator
+            TwinScale Sim
           </h1>
-          <p className="text-slate-400 text-xs tracking-widest mt-1 uppercase">Live Server</p>
+          <p className="text-slate-400 text-xs tracking-widest mt-1 uppercase">Live Logistics v3.0</p>
         </div>
 
         {/* Fleet Status Card */}
@@ -43,7 +46,7 @@ function App() {
           <div className="flex justify-between items-center mb-4">
             <span className="text-sm font-medium">Tasks Queued</span>
             <span className="text-orange-400 font-bold font-mono">
-              {tasks.filter(t => t.status === 'In Transit').length.toString().padStart(2, '0')}
+              {activeTaskCount.toString().padStart(2, '0')}
             </span>
           </div>
 
@@ -73,7 +76,7 @@ function App() {
 
         {/* Dynamic Activity Log */}
         <div className="flex-grow flex flex-col gap-3">
-          <h2 className="text-xs font-bold text-slate-500 tracking-widest uppercase mt-2">Recent Activity</h2>
+          <h2 className="text-xs font-bold text-slate-500 tracking-widest uppercase mt-2">Activity Log</h2>
           
           <div className="flex flex-col gap-2 overflow-y-auto">
             {tasks.length === 0 ? (
@@ -86,11 +89,14 @@ function App() {
                   <div className="flex flex-col gap-1">
                     <span className="font-mono text-slate-300 text-xs">{task.id}</span>
                     <span className={`font-mono text-[10px] ${getRobotColor(task.robotId).split(' ')[1]}`}>
-                      Assigned: {task.robotId}
+                      Unit: {task.robotId}
                     </span>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className={`text-[11px] font-bold tracking-wider uppercase ${task.status === 'Completed' ? 'text-green-400' : 'text-orange-400'}`}>
+                    {/* DYNAMIC MULTI-PHASE COLORS */}
+                    <span className={`text-[11px] font-bold tracking-wider uppercase 
+                      ${task.status === 'Completed' ? 'text-green-400' : 
+                        task.status === 'Delivering' ? 'text-cyan-400' : 'text-orange-400'}`}>
                       {task.status}
                     </span>
                     <span className="text-slate-500 text-[10px]">{task.time}</span>
@@ -119,7 +125,7 @@ function App() {
 
       <div className="flex-grow p-4 md:p-8 flex flex-col relative">
         <div className="absolute top-12 right-12 z-10 bg-slate-900/80 backdrop-blur border border-slate-700 px-3 py-1.5 rounded-md text-xs font-mono text-slate-400 shadow-lg">
-          REC
+          REC // MULTI_CAM
         </div>
         <div className="w-full h-full rounded-2xl overflow-hidden border border-slate-700 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative bg-slate-900">
           <VanillaWarehouse />
